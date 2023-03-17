@@ -34,6 +34,7 @@ public class UserServiceImpl implements UserService {
 			Optional<Role> role = this.rolRepository.findById(2L);
 			if(role.isPresent()) {
 				roles.add(role.get());
+				user.setRoles(roles);
 			}
 			return this.userRepository.save(user);
 		}
