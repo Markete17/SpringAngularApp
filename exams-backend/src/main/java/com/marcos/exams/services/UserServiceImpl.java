@@ -7,6 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.marcos.exams.entities.Role;
@@ -16,13 +19,25 @@ import com.marcos.exams.repositories.UserRepository;
 import com.marcos.exams.validations.UserFoundException;
 
 @Service("userServiceImpl")
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService,UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
 	
 	@Autowired
 	private RolRepository rolRepository;
+	
+	// Cargar un usuario por el username
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		
+		Optional<User> userOptional = this.userRepository.findByUsername(username);
+		if (userOptional.isPresent()) {
+			throw new UsernameNotFoundException("User not found");
+		}
+		return null;
+			
+	}
 
 	@Override
 	public User saveUser(User user){
